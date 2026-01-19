@@ -6,6 +6,16 @@ Nº de Identificação Fiscal (NIF)
 Cursos nos quais se inscreve (pode ser mais de um, inclui informaçao sobre data, horário e local da ação de formação)
 Diagnóstico de competências Digitais (pode ser mais de uma resposta)
 
+os campos são:
+Nome completo
+E-mail
+Contacto telefónico
+Número de Identificação Fiscal
+Data de nascimento (dd/mm/aaaa)
+Diagnóstico de Competências Digitais (Resposta à pergunta 1, 2 e 3)
+Cursos de formação
+(Selecione o(s) curso(s) que pretende frequentar)
+
 2. Inscrição
 É necessário colocar na base de dados do Departamento de Desenvolvimento e Formação (DDF) os seguintes dados:
 Nome Completo	

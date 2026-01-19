@@ -14,11 +14,33 @@
 
 ---
 
-## 2. Diagrama de Esquema
+## 2. Convenções de Desenvolvimento (Standard v1.0)
+
+Para garantir consistência e manutenibilidade, todo o desenvolvimento deve seguir estas regras estritas:
+
+### 2.1. Nomenclatura de Base de Dados (PL/SQL e SQL)
+*   **Idioma:** Português (PT-PT) para todos os objetos visíveis.
+*   **Tabelas (Tables):**
+    *   **Entidades Principais:** PascalCase, Plural. Ex: `Alunos`, `Turmas`, `Cursos`.
+    *   **Tabelas de Lookup:** Prefixo `Tipos_` + Singular. Ex: `Tipos_Genero`.
+    *   **Associações:** Funcional. Ex: `Equipa_Formativa`.
+*   **Colunas:**
+    *   **PK:** `ID_` + Nome Tabela Singular. Ex: `ID_Aluno`.
+    *   **FK:** Igual à PK referenciada. Ex: `ID_Curso`.
+    *   **Flags:** `Ativo`, `Aprovado` ('S'/'N').
+    *   **Datas:** Prefixo `Data`. Ex: `Data_Inicio`.
+
+### 2.2. Nomenclatura APEX
+*   **Items:** `P<Page>_<NomeColuna>`. Ex: `P10_Nome_Completo`.
+*   **Regions:** Nomes funcionais em Português.
+
+---
+
+## 3. Diagrama de Esquema
 
 ### A. Domínio: Configuração e Catálogo (CORE)
 
-#### 1. `Programas` (LMS_PROGRAMS)
+#### 1. `Programas` (Programas)
 *Catálogo de topo.*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
@@ -29,7 +51,7 @@
 | **Descricao** | `VARCHAR2(4000)` | | Descrição pública. |
 | **Ativo** | `CHAR(1)` | `Check ('S','N')` | Se o programa está ativo. |
 
-#### 2. `Cursos` (LMS_COURSES)
+#### 2. `Cursos` (Cursos)
 *Unidade de formação. Enriquecido com metodologia e recursos.*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
@@ -52,7 +74,7 @@
 | **URL_Manual_Digital** | `VARCHAR2(500)` | | Link para manual/recursos base. |
 | **ID_Estado_Curso** | `NUMBER` | `FK` | Lookup: `Tipos_Estado_Curso`. |
 
-#### 3. `Modulos` (LMS_MODULES)
+#### 3. `Modulos` (Modulos)
 *Estrutura hierárquica.*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
@@ -64,7 +86,7 @@
 | **Carga_Horaria** | `NUMBER` | | Horas do módulo. |
 | **Tipo_Avaliacao** | `VARCHAR2(20)` | `Check` | 'QUANTITATIVA', 'QUALITATIVA', 'NENHUMA'. |
 
-#### 4. `Competencias` (LMS_COMPETENCIES)
+#### 4. `Competencias` (Competencias)
 *Catálogo de competências e badges.*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
@@ -83,7 +105,7 @@
 
 ### B. Domínio: Pessoas e Entidades (PEOPLE)
 
-#### 5. `Entidades` (LMS_ENTITIES)
+#### 5. `Entidades` (Entidades)
 *Tabela única para todos os intervenientes. Enriquecida com dados profissionais.*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
@@ -118,7 +140,7 @@
 | **Ativo** | `CHAR(1)` | | Estado da entidade. |
 | **Origem_Registo** | `VARCHAR2(50)` | | 'EXCEL', 'FORM', 'MANUAL'. |
 
-#### 6. `Papeis_Entidade` (LMS_ENTITY_ROLES)
+#### 6. `Papeis_Entidade` (Papeis_Entidade)
 *Define os papéis (Roles).*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
@@ -131,7 +153,7 @@
 
 ### C. Domínio: Operação Formativa (OPS)
 
-#### 7. `Turmas` (LMS_CLASSES)
+#### 7. `Turmas` (Turmas)
 *Instância de um curso.*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
@@ -154,7 +176,7 @@
 | **Avaliacao_Ativa** | `CHAR(1)` | | 'S'/'N'. |
 | **Observacoes** | `CLOB` | | Notas internas. |
 
-#### 8. `Equipa_Formativa` (LMS_CLASS_TRAINERS)
+#### 8. `Equipa_Formativa` (Equipa_Formativa)
 *Associação N:N Formadores-Turma.*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
@@ -163,7 +185,7 @@
 | **ID_Formador** | `NUMBER` | `FK` | Formador. |
 | **Principal** | `CHAR(1)` | | Formador responsável? |
 
-#### 9. `Matriculas` (LMS_ENROLLMENTS)
+#### 9. `Matriculas` (Matriculas)
 *Inscrição do aluno na turma. Inclui agora o diagnóstico.*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
@@ -183,7 +205,7 @@
 | **Obs_SIGO** | `VARCHAR2(4000)` | | Notas para certificação. |
 | **ID_Nivel_Experiencia**| `NUMBER` | `FK` | Lookup: `Tipos_Nivel_Experiencia`. |
 
-#### 10. `Sessoes` (LMS_SESSIONS)
+#### 10. `Sessoes` (Sessoes)
 *Aulas.*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
@@ -199,7 +221,7 @@
 | **ID_Formador** | `NUMBER` | `FK` | Formador desta sessão. |
 | **URL_Recursos** | `VARCHAR2(1000)` | | Link para materiais. |
 
-#### 11. `Presencas` (LMS_ATTENDANCE)
+#### 11. `Presencas` (Presencas)
 *Assiduidade.*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
@@ -215,7 +237,7 @@
 
 ### D. Domínio: Avaliação (EVAL)
 
-#### 12. `Avaliacoes_Modulo` (LMS_ASSESSMENTS)
+#### 12. `Avaliacoes_Modulo` (Avaliacoes_Modulo)
 *Notas granulares por módulo.*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
@@ -227,7 +249,7 @@
 | **Feedback_Texto** | `CLOB` | | Feedback qualitativo. |
 | **Aprovado** | `CHAR(1)` | | 'S'/'N'. |
 
-#### 13. `Badges_Conquistados` (LMS_STUDENT_BADGES)
+#### 13. `Badges_Conquistados` (Badges_Conquistados)
 *Passaporte de competências.*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
@@ -242,7 +264,7 @@
 
 ### E. Domínio: Administrativo (ADMIN)
 
-#### 14. `Itens_Dossier_Turma` (LMS_DOSSIER_CHECKLIST)
+#### 14. `Itens_Dossier_Turma` (Itens_Dossier_Turma)
 *Checklist de documentos.*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
@@ -255,7 +277,7 @@
 | **Validado_Por** | `VARCHAR2(255)` | | Utilizador que validou. |
 | **Data_Validacao** | `DATE` | | Data. |
 
-#### 15. `Faturas_Formadores` (LMS_INVOICES)
+#### 15. `Faturas_Formadores` (Faturas_Formadores)
 *Processamento de pagamentos. Enriquecido com datas finanças.*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
@@ -271,7 +293,7 @@
 | **Data_Contabilistica** | `DATE` | **[NOVO]** | Data de contabilidade. |
 | **Data_Pagamento** | `DATE` | **[NOVO]** | Data do pagamento. |
 
-#### 16. `Equipamentos_Alocados` (LMS_EQUIPMENTS)
+#### 16. `Equipamentos_Alocados` (Equipamentos_Alocados)
 *Gestão de hardware.*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
@@ -284,7 +306,7 @@
 | **Data_Devolucao** | `DATE` | | Devolução. |
 | **Estado_Conservacao** | `VARCHAR2(200)` | | Obs estado. |
 
-#### 17. `Modelos_Comunicacao` (LMS_COMM_TEMPLATES)
+#### 17. `Modelos_Comunicacao` (Modelos_Comunicacao)
 *Templates de emails.*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
@@ -454,7 +476,7 @@ Definição das tabelas de domínio para normalização de dados. Todas seguem u
 | **Codigo** | `VARCHAR2(20)` | `UK` | 'EMAIL', 'SMS'. |
 | **Descricao** | `VARCHAR2(200)` | `Not Null` | Designação. |
 
-#### 34. `Locais` (LMS_LOCATIONS)
+#### 34. `Locais` (Locais)
 *Espaços físicos.*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
