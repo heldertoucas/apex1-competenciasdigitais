@@ -67,18 +67,21 @@ CREATE TABLE Equipamentos_Alocados (
 4.  **Include Form Page:** Marque esta opção.
 5.  **Form Page Name:** `Editar Fatura`.
 6.  **Table:** `Faturas_Formadores`.
-3.  **Configuração:**
+7.  **Configuração:**
     *   No Report, adicione computações ou destaques (Highlights) para faturas "Em Atraso" (onde `Data_Pagamento` é NULL e `Data_Emissao` > 30 dias).
 
 ### 2.2. Dossier Digital
-1.  **Create Page** > **Interactive Grid**.
-2.  **Table:** `Itens_Dossier_Turma`.
-3.  **Funcionalidade:** O coordenador entra na Turma e vê a lista de documentos obrigatórios (Sumários, Pautas, etc.). Marca "Presente" e cola o link do ficheiro.
+1.  **Onde criar:** Idealmente dentro da página de **Detalhe da Turma** (como uma nova Tab "Dossier") ou numa página nova linkada a partir da Turma.
+2.  **Create Page** (ou Region) > **Interactive Grid**.
+3.  **Table:** `Itens_Dossier_Turma`.
+4.  **Where Clause:** `ID_Turma = :P_ID_TURMA`.
+5.  **Funcionalidade:** O coordenador entra na Turma e vê a lista de documentos obrigatórios (Sumários, Pautas, etc.). Marca "Presente" e cola o link do ficheiro.
 
 ### 2.3. Exportador SIGO (Relatório)
 Precisamos de gerar um CSV para o SIGO.
 1.  **Create Page** > **Interactive Report**.
-2.  **SQL Query (Baseada em `documentos.md`):**
+2.  **Contexto:** Esta página deve receber um `P_TURMA_ID` de entrada (Link a partir da lista de Turmas).
+3.  **SQL Query (Baseada em `documentos.md`):**
     ```sql
     SELECT 
         'PE' as Plano,

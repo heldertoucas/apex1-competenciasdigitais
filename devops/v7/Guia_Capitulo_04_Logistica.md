@@ -90,21 +90,58 @@ CREATE TABLE Sessoes (
     *   **Cabeçalho:** Código, Nome, Estado.
     *   **Datas e Local:** Data Início, Fim, Local, Horário.
     *   **Administrativo:** Nº Informação, SIGO.
-5.  Adicione uma região **Interactive Grid** para a `Equipa_Formativa` (Formadores da Turma) ligada pelo `ID_Turma`.
+593.  **Adicionar Região Equipa Formativa (IG):**
+    *   Clique com o botão direito em "Content Body" > **Create Region**.
+    *   **Title:** `Equipa Formativa`.
+    *   **Type:** `Interactive Grid`.
+    *   **Source Table:** `EQUIPA_FORMATIVA`.
+    *   **Where Clause:** `ID_TURMA = :P_ID_TURMA` (Substitua `P_` pelo número da página).
+    *   **Page Items to Submit:** `P_ID_TURMA`.
+    *   **Master-Detail:** Selecione a coluna `ID_TURMA` da Grid, e na direita defina **Master Region** como a região do formulário da Turma, ou defina **Default Value** > **Item** > `P_ID_TURMA`.
+    *   Oculte a coluna `ID_TURMA`.
 
 ### 2.2. Calendário de Sessões
 1.  Na página de Detalhe da Turma, crie uma **Região Calendar**.
-2.  **Source:** Tabela `SESSOES`.
-3.  **Where Clause:** `ID_TURMA = :P_ID_TURMA`.
-4.  **Display Column:** `Nome`.
-5.  **Start Date Column:** `Data_Sessao` (Nota: O calendário do APEX precisa de TIMESTAMP para horas, poderá ter de concatenar Data+Hora numa View, mas para visão diária simples serve a Data).
+297.  **Source Type:** `SQL Query`.
+98.  **SQL Query:**
+    ```sql
+    SELECT 
+        ID_Sessao,
+        Nome,
+        -- Concatenar Data com Hora para o Calendário saber onde pôr a barra
+        TO_DATE(TO_CHAR(Data_Sessao, 'YYYY-MM-DD') || ' ' || Hora_Inicio, 'YYYY-MM-DD HH24:MI') as Data_Inicio_Cal,
+        TO_DATE(TO_CHAR(Data_Sessao, 'YYYY-MM-DD') || ' ' || Hora_Fim, 'YYYY-MM-DD HH24:MI') as Data_Fim_Cal
+    FROM Sessoes
+    WHERE ID_Turma = :P_ID_TURMA
+    ```
+99.  **Page Items to Submit:** `P_ID_TURMA`.
+100. **Display Column:** `Nome`.
+101. **Start Date Column:** `Data_Inicio_Cal`.
+102. **End Date Column:** `Data_Fim_Cal`.
 
-### 2.3. Automação: Gerador de Cronograma (Bónus)
+102. ### 2.3. Automação: Gerador de Cronograma (Bónus)
 Para evitar criar 30 sessões à mão:
-1.  Crie um botão **"Gerar Sessões"** no Form de Turma.
-2.  Crie um Processo PL/SQL que corre ao clicar (Submit):
-    *   *Lógica simplificada:* Loop da Data Início à Data Fim; Se for dia útil, INSERT INTO Sessoes.
-    *   (Este código pode ser refinado mais tarde).
+1.  Crie um botão **"Gerar Sessões"** no Form de Turma (Action: Submit Page).
+2.  Crie um Processo (Processing) > **Type:** Execute Code.
+3.  **Server-side Condition:** When Button Pressed > "Gerar Sessões".
+4.  **PL/SQL Code:**
+    ```sql
+    DECLARE
+        l_data DATE := :P_DATA_INICIO; -- Use os nomes reais dos seus itens (ex: P10_DATA_INICIO)
+    BEGIN
+        -- Loop da data inicio à data fim
+        WHILE l_data <= :P_DATA_FIM LOOP
+            -- Se não for Sábado (7) nem Domingo (1)
+            IF TO_CHAR(l_data, 'D') NOT IN (1, 7) THEN 
+                INSERT INTO Sessoes (ID_Turma, Nome, Data_Sessao, Hora_Inicio, Hora_Fim)
+                VALUES (:P_ID_TURMA, 'Sessão Regular', l_data, '18:00', '20:00');
+            END IF;
+            l_data := l_data + 1;
+        END LOOP;
+    END;
+    ```
+    *   *Nota:* O formato de dia da semana (1,7) depende da configuração NLS do servidor. Verifique se 1=Domingo ou 1=Segunda.
+    *   Este código assume horário fixo 18-20h para simplificar.
 
 ---
 **Conclusão Capítulo 4:**

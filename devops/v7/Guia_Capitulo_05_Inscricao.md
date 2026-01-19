@@ -54,7 +54,10 @@ Este é um requisito crítico: permitir selecionar vários alunos de uma lista e
 3.  **Adicionar Item de Filtro:**
     *   Crie uma região "Filtros".
     *   Item `P10_ID_TURMA` (Select List).
-    *   Source: `SELECT Nome_Turma, ID_Turma FROM Turmas WHERE ID_Estado_Turma = (ID de 'Confirmada')`.
+    *   **Definição do Filtro:**
+    *   **Source Type:** `SQL Query`.
+    *   **SQL Query:** `SELECT Nome_Turma d, ID_Turma r FROM Turmas WHERE ID_Estado_Turma IN (SELECT ID_Estado_Turma FROM Tipos_Estado_Turma WHERE Codigo = 'CONFIRMADA')`.
+    *   **Display Null Value:** Yes (Label: "- Selecione Turma -").
 
 ### 2.2. Região 1: Alunos Matriculados
 1.  Crie uma região **Interactive Grid**.
@@ -80,22 +83,27 @@ Este é um requisito crítico: permitir selecionar vários alunos de uma lista e
       )
     -- Nota: Mais tarde, filtrar apenas quem fez Pre-Inscrição no Curso da Turma
     ```
-3.  **Adicionar Checkbox:**
-    *   Adicione uma coluna virtual `APEX_ITEM.CHECKBOX2(1, e.ID_Entidade) as SEDELECIONAR`.
-    *   *Alternativa Moderna:* Use uma Interactive Grid editável e selecione as linhas.
+3.  **Adicionar Checkbox (Coluna Virtual):**
+    *   No relatório, adicione uma coluna derivada na SQL ou use a seguinte expressão: `APEX_ITEM.CHECKBOX2(1, e.ID_Entidade) as Selecionar`.
+    *   **Importante:** Vá às propriedades da coluna `Selecionar` > **Security** > **Escape special characters**: `No`. (Isto é obrigatório para a checkbox aparecer).
+    *   **Heading:** `Selecionar`.
+    *   **Alignment:** `Center`.
 
 ### 2.4. Processo de Matrícula
 1.  Crie um botão **"Matricular Selecionados"**.
-2.  Crie um Processo (Processing) que corre ao clicar no botão.
-3.  **Código PL/SQL (Exemplo com APEX_APPLICATION.G_F01):**
+2.  Crie um Processo (Processing) > **Type:** Execute Code.
+3.  **PL/SQL Code:**
     ```sql
     BEGIN
+        -- Loop pelos itens selecionados na checkbox "1" (APEX_APPLICATION.G_F01)
         FOR i IN 1..APEX_APPLICATION.G_F01.COUNT LOOP
              INSERT INTO Matriculas (ID_Turma, ID_Aluno, ID_Estado_Matricula)
-             VALUES (:P10_ID_TURMA, APEX_APPLICATION.G_F01(i), 1); -- 1 = Inscrito
+             VALUES (:P10_ID_TURMA, APEX_APPLICATION.G_F01(i), 1); -- Assumindo 1 = ID do Estado 'Inscrito', verifique na sua tabela Tipos.
         END LOOP;
     END;
     ```
+    *   *Atenção:* Substitua `P10_ID_TURMA` pelo nome real do item da sua página.
+    *   *Nota:* O valor `1` no insert assume que o ID para 'Inscrito' na tabela `Tipos_Estado_Matricula` é 1. Se não for, faça uma subquery: `(SELECT ID_Estado_Matricula FROM Tipos_Estado_Matricula WHERE Codigo='INSCRITO')`.
 
 ---
 **Conclusão Capítulo 5:**

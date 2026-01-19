@@ -111,15 +111,35 @@ O formulário de cursos gerado é muito longo. Vamos melhorá-lo.
 2.  Localize os itens `P_METODOLOGIA_FORMACAO`, `P_RECURSOS_DIDATICOS`, `P_CONTEUDOS_PROGRAMATICOS`.
 3.  Para cada um, altere o **Type** para `Rich Text Editor`.
     *   Isto permitirá ao coordenador formatar texto com bullets, negrito, etc.
-4.  Organize os campos em Abas (Tabs) para não ficar um "linguiçāo":
-    *   Crie uma região **Tabs Container**.
-    *   Arraste sub-regiões para dentro: "Dados Gerais", "Pedagogia", "Conteúdos", "Ligações SIGO".
-    *   Arraste os campos respetivos para cada aba.
+4.  **Organizar em Abas (Tabs) - Passo a Passo:**
+    *   No painel **Rendering** (esquerda), clique com o botão direito em `Components` ou numa região existente e escolha **Create Region**.
+    *   **Title:** `Detalhes do Curso`.
+    *   **Type:** `Static Content`.
+    *   **Template:** `Tabs Container` (Isto é fundamental: selecione o template "Tabs Container" na secção Appearance).
+    *   **Criar as Abas (Sub-regiões):**
+        *   Clique com o botão direito na região `Detalhes do Curso` > **Create Sub Region**.
+        *   **Title:** `Dados Gerais` (Type: `Static Content`).
+        *   Repita para criar: `Pedagogia`, `Conteúdos`, `Ligações SIGO`.
+    *   **Mover os Campos:**
+        *   Arraste os campos de texto rico (`P_METODOLOGIA...`, etc) para dentro das respetivas abas (ex: `Pedagogia` e `Conteúdos`).
+    *   *Nota Importante:* `P_` é um prefixo genérico. Na sua página será algo como `P5_` (se a página for a 5). Ajuste sempre para o número real da sua página.
 
 ### 2.4. Associação de Competências
 Para associar competências aos módulos:
-1.  Na região (IG) dos **Módulos**, adicione um botão ou link para uma nova página modal de "Gerir Competências".
-2.  *Alternativa simples:* Criar uma página Master-Detail separada para `MODULOS` -> `COMPETENCIAS`, acedida via link na lista de módulos.
+1.  **Criar Página de Competências (Master-Detail):**
+    *   Vá a **Create Page** > **Master-Detail** > **Stacked**.
+    *   **Page Name:** `Competências do Módulo`.
+    *   **Master Table:** `MODULOS`.
+    *   **Detail Table:** `COMPETENCIAS` (FK: `ID_MODULO`).
+    *   **Criar.**
+2.  **Criar Link na Grid de Módulos:**
+    *   Volte à página `Catálogo de Cursos`.
+    *   Na região (IG) dos **Módulos**, vá a **Columns** > Botão direito > **Create Virtual Column**.
+    *   **Heading:** `Competências`.
+    *   **Type:** `Link`.
+    *   **Target:** Selecione a página que acabou de criar (`Competências do Módulo`).
+        *   **Set Items:** Defina `P_ID_MODULO` (da nova página) com o valor `#ID_MODULO#` (da grid atual).
+    *   Isto permite clicar num Módulo e definir as suas competências específicas.
 
 ---
 **Conclusão Capítulo 3:**

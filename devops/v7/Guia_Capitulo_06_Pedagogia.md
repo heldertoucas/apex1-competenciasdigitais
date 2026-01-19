@@ -64,8 +64,10 @@ Uma área simplificada para o formador, idealmente optimizada para Tablets.
 2.  **Cards**.
 3.  **Page Name:** `Minhas Turmas`.
 4.  **Table:** `TURMAS` (com SQL Query customizada depois).
-3.  **Where Clause:** `ID_Formador = :APP_USER_ENTIDADE_ID` (Requer lógica de login para mapear User APEX -> Entidade).
-4.  **Card Actions:** Link para o "Diário de Aulas".
+4.  **Where Clause:** `ID_Formador = :APP_USER_ENTIDADE_ID`
+    *   *Nota Importante:* Isto requer que tenha criado lógica de Login para associar o utilizador APEX a um ID na tabela Entidades, guardando-o num Item de Aplicação (Application Item).
+    *   *Para Testar Agora:* Se ainda não tem login customizado, comente esta cláusula WHERE para ver todas as turmas (`-- ID_Formador = ...`).
+5.  **Card Actions:** Link para o "Diário de Aulas".
 
 ### 2.2. Diário de Aulas (Gestão de Presenças)
 1.  **Create Page** > **Form**.
@@ -76,8 +78,21 @@ Uma área simplificada para o formador, idealmente optimizada para Tablets.
     *   Dentro da página da sessão, adicione um Interactive Grid na tabela `Presencas`.
     *   Filtro: `ID_Sessao = :P_ID_SESSAO`.
 3.  **Botão "Gerar Lista de Turma":**
-    *   Como no início a tabela de presenças está vazia, crie um processo que insere uma linha para cada aluno matriculado na turma dessa sessão, com estado "Pendente".
-    *   O formador depois só muda para "Falta" onde necessário.
+    *   Crie um botão **"Gerar Lista"** na região ou na posição "Right of Interactive Grid".
+    *   Crie um Processo (Processing) que corre ao clicar (Submit):
+    *   **PL/SQL Code:**
+        ```sql
+        BEGIN
+            -- Insere uma linha de presença para cada aluno matriculado na turma, se ainda não existir para esta sessão
+            INSERT INTO Presencas (ID_Sessao, ID_Matricula, Horas_Assistidas, ID_Estado_Presenca)
+            SELECT :P50_ID_SESSAO, m.ID_Matricula, 0, NULL -- NULL ou ID default
+            FROM Matriculas m
+            WHERE m.ID_Turma = (SELECT ID_Turma FROM Sessoes WHERE ID_Sessao = :P50_ID_SESSAO)
+              AND m.ID_Estado_Matricula IN (SELECT ID_Estado_Matricula FROM Tipos_Estado_Matricula WHERE Codigo = 'FREQUENTAR') -- Apenas ativos
+              AND NOT EXISTS (SELECT 1 FROM Presencas p WHERE p.ID_Matricula = m.ID_Matricula AND p.ID_Sessao = :P50_ID_SESSAO);
+        END;
+        ```
+    *   *Nota:* O formador depois só edita a grelha para mudar para "Presente" ou "Falta".
 
 ### 2.3. Lançamento de Notas
 1.  **Create Page** > **Master-Detail**.

@@ -124,9 +124,16 @@ O APEX criou o formulário, mas pôs os campos todos seguidos numa única regiã
         *   **Title:** `Identificação`.
         *   **Type:** `Static Content`.
         *   **Template:** `Standard` (ou *Collapsible* se quiser que encolha).
-    *   Repita o processo para criar mais duas sub-regiões dentro de `Dados da Pessoa`:
-        *   `Contactos e Morada` (Type: `Static Content`).
-        *   `Dados Profissionais` (Type: `Static Content`).
+    *   **Criar Sub-Região "Contactos e Morada":**
+        *   Clique com o botão direito em `Dados da Pessoa` e selecione **Create Sub Region**.
+        *   **Title:** `Contactos e Morada`.
+        *   **Type:** `Static Content`.
+        *   **Template:** `Standard`.
+    *   **Criar Sub-Região "Dados Profissionais":**
+        *   Clique com o botão direito em `Dados da Pessoa` e selecione **Create Sub Region**.
+        *   **Title:** `Dados Profissionais`.
+        *   **Type:** `Static Content`.
+        *   **Template:** `Standard`.
 3.  **Mover Campos (Arrastar e Largar):**
     *   Na árvore de Rendering, selecione os itens (campos) e arraste-os para dentro das novas sub-regiões:
         *   **Para `Identificação`:** `P3_NOME_COMPLETO`, `P3_NIF`, `P3_DATA_NASCIMENTO`, `P3_ID_GENERO`, `P3_ID_TIPO_DOC`, `P3_NUM_DOC_IDENTIFICACAO`.
@@ -138,9 +145,29 @@ O APEX criou o formulário, mas pôs os campos todos seguidos numa única regiã
     *   No painel da direita (Property Editor), altere **Type** para `Select List`.
     *   Em **List of Values**:
         *   **Type:** `SQL Query`.
-        *   **SQL Query:** `SELECT Descricao d, ID_Genero r FROM Tipos_Genero ORDER BY Ordem, Descricao`.
+        *   **SQL Query:** `SELECT Descricao d, ID_Genero r FROM Tipos_Genero ORDER BY Descricao`.
         *   **Display Null Value:** `Yes` (Label: "- Selecione -").
-    *   *Repita este processo para:* `ID_TIPO_DOC`, `ID_QUALIFICACAO`, `ID_SITUACAO_PROF`.
+    *   **Configurar `ID_TIPO_DOC`:**
+        *   Selecione o campo `P3_ID_TIPO_DOC`.
+        *   **Type:** `Select List`.
+        *   **List of Values:**
+            *   **Type:** `SQL Query`.
+            *   **SQL Query:** `SELECT Descricao d, ID_Tipo_Doc r FROM Tipos_Doc_Identificacao ORDER BY Descricao`.
+            *   **Display Null Value:** `Yes` (Label: "- Selecione -").
+    *   **Configurar `ID_QUALIFICACAO`:**
+        *   Selecione o campo `P3_ID_QUALIFICACAO`.
+        *   **Type:** `Select List`.
+        *   **List of Values:**
+            *   **Type:** `SQL Query`.
+            *   **SQL Query:** `SELECT Descricao d, ID_Qualificacao r FROM Tipos_De_Qualificacao ORDER BY Ordem, Descricao`.
+            *   **Display Null Value:** `Yes` (Label: "- Selecione -").
+    *   **Configurar `ID_SITUACAO_PROF`:**
+        *   Selecione o campo `P3_ID_SITUACAO_PROF`.
+        *   **Type:** `Select List`.
+        *   **List of Values:**
+            *   **Type:** `SQL Query`.
+            *   **SQL Query:** `SELECT Descricao d, ID_Situacao_Prof r FROM Tipos_Situacao_Profissional ORDER BY Descricao`.
+            *   **Display Null Value:** `Yes` (Label: "- Selecione -").
 5.  **Gravar:** Clique em **Save**.
 
 ### 2.3. Adicionar Gestão de Papéis (Mestre-Detalhe)
@@ -159,7 +186,7 @@ Dentro da ficha da pessoa, queremos dizer se ela é Formador, Aluno, etc.
     *   Marque a coluna como **Hidden** (o utilizador não precisa de a ver, é automático).
 6.  **Coluna Código Papel:**
     *   Altere o tipo para `Select List`.
-    *   **Static Values:** `ADMIN;Administrador, FORMADOR;Formador, FORMANDO;Formando, COORDENADOR;Coordenador`.
+    *   **Static Values:** `STATIC:Administrador;ADMIN,Coordenador;COORDENADOR,Formador;FORMADOR,Formando;FORMANDO,Staff;STAFF`
 7.  **Gravar e Testar:** Execute a página. Tente criar uma pessoa e atribuir-lhe papéis.
 
 ---
