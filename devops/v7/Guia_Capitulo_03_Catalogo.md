@@ -134,12 +134,20 @@ Para associar competências aos módulos:
     *   **Criar.**
 2.  **Criar Link na Grid de Módulos:**
     *   Volte à página `Catálogo de Cursos`.
-    *   Na região (IG) dos **Módulos**, vá a **Columns** > Botão direito > **Create Virtual Column**.
+    *   Na região (IG) dos **Módulos**, no painel à esquerda (Columns), clique com o botão direito > **Create Column**.
     *   **Heading:** `Competências`.
-    *   **Type:** `Link`.
-    *   **Target:** Selecione a página que acabou de criar (`Competências do Módulo`).
-        *   **Set Items:** Defina `P_ID_MODULO` (da nova página) com o valor `#ID_MODULO#` (da grid atual).
-    *   Isto permite clicar num Módulo e definir as suas competências específicas.
+    *   **Source:**
+        *   **Type:** `None` (Isto torna-a uma coluna "Virtual").
+    *   **Identification:**
+        *   **Type:** `Link`.
+    *   **Link:**
+        *   **Target:** Clique em "No Link Defined".
+            *   **Page:** Selecione a página `Competências do Módulo`.
+            *   **Set Items:**
+                *   **Name:** `P_ID_MODULO` (ou o nome real do item na pág. destino, ex: P5_ID_MODULO).
+                *   **Value:** `&ID_MODULO.` (Selecione a coluna ID_MODULO na lista de valores).
+            *   Clique **OK**.
+        *   **Link Text:** Escreva `Gerir` (ou use um ícone `<span class="fa fa-list"></span>` e defina "Escape Special Characters" como No).
 
 ---
 **Conclusão Capítulo 3:**

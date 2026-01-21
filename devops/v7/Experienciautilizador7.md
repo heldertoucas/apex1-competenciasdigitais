@@ -26,11 +26,13 @@ Este capítulo detalha as interações do utilizador com a interface e a consequ
 O Coordenador estabelece os alicerces do sistema, garantindo que a taxonomia da formação reflete os objetivos estratégicos através de interfaces de *back-office*.
 
 1. **Definição da Matriz Formativa (Programas e Cursos):**  
-   O Coordenador acede ao menu de gestão de catálogos. Ao criar um novo Curso, preenche os campos descritivos base (objetivos, conteúdos) e define explicitamente os parâmetros pedagógicos: a **Metodologia de Formação** (ex: métodos ativos, demonstrativos) e os **Recursos Didáticos** necessários para a execução (ex: hardware específico, software). Através de uma lista de seleção múltipla (shuttle), associa as Competências (do catálogo DigComp) que o curso visa desenvolver e certifica-se de associar o curso ao Programa correto.  
+   O Coordenador acede ao menu de gestão de catálogos. Ao criar um novo Curso, preenche os campos descritivos base e define os parâmetros pedagógicos (Metodologia, Recursos).  
+   Na aba **Módulos**, gere a estrutura curricular através de uma **Grelha Mestre-Detalhe (CRUD)**, permitindo adicionar conteúdos e definir cargas horárias. Para cada módulo, clica em "Competências" para aceder a uma **Janela Modal** onde seleciona, linha a linha, as competências DigComp (v2.2) associadas, definindo obrigatoriedade.  
+   Paralelamente, existe agora um **Banco Global de Medalhas**, onde o coordenador associa múltiplos Badges ("Open Badges") a cada competência, criando um ecossistema de micro-credenciais flexível.
    **⚙️ Implicações no Modelo de Dados:**  
-   * **Tabelas:** LMS_PROGRAMS, LMS_COURSES, LMS_COMPETENCIES.  
-   * **Ação de Dados:** INSERT/UPDATE em LMS_COURSES preenchendo `Metodologia_Formacao` e `Recursos_Didaticos`.  
-   * **Campos Críticos:** `Competencias_Associadas` (Relação N:N).  
+   * **Tabelas:** LMS_PROGRAMS, LMS_COURSES, LMS_MODULES, LMS_COMPETENCIES, CATALOGO_MEDALHAS.  
+   * **Ação de Dados:** Gestão M:N em `MODULO_COMPETENCIAS` e `COMPETENCIA_MEDALHAS` via Interactive Grids.  
+   * **Campos Críticos:** `Obrigatorio` (na competência) e `URL_Claim_Badge` (na medalha).  
 
 2. **Parametrização da Comunicação e Logística:**  
    O utilizador configura os Modelos de Comunicação em HTML, inserindo placeholders dinâmicos (ex: {Nome\_Formando}) para personalização em massa. Paralelamente, gere o inventário de Tipos de Equipamento e de Tipos de Documento, assegurando que o sistema sabe que documentos exigir no Dossier (ex: Questionários de Avaliação).  

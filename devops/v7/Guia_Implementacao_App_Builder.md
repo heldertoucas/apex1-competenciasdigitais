@@ -60,9 +60,11 @@ O desenvolvimento segue uma lógica **"Data-First"**: primeiro constrói-se a es
 ### Etapa 3.2: Backoffice do Catálogo
 *   **Tarefa 3.2.1:** Criar Interface de Gestão de Programas (CRUD Simples).
 *   **Tarefa 3.2.2:** Criar Interface de Gestão de Cursos (Master-Detail com Módulos).
-    *   *Requisito:* Campos `Metodologia_Formacao` e `Recursos_Didaticos` devem usar Rich Text Editor.
-*   **Tarefa 3.2.3:** Criar Interface de Associação de Competências.
-    *   *Funcionalidade:* Shuttle ou Popup LOV para associar Competências do catálogo DigComp aos Módulos/Cursos.
+    *   *Módulos UI:* Implementar Interactive Grid (Editable) com lógica Mestre-Detalhe (FK `ID_Curso`).
+    *   *Competências UI:* Implementar Modal CRUD (Grelha) para associar competências ao módulo (com flag `Obrigatório`).
+*   **Tarefa 3.2.3:** Criar Interface de Gestão de Medalhas (M:N).
+    *   *Global:* Página IG para criar Open Badges (`Catalogo_Medalhas`) com `URL_Claim_Badge`.
+    *   *Associação:* Modal CRUD para ligar Medalhas a Competências (`Competencia_Medalhas`).
 
 ---
 
@@ -115,10 +117,12 @@ O desenvolvimento segue uma lógica **"Data-First"**: primeiro constrói-se a es
 ### Etapa 6.2: O Portal do Formador
 *   **Tarefa 6.2.1:** Criar Dashboard simples "Minhas Turmas" (filtrado pelo utilizador logado).
 *   **Tarefa 6.2.2:** Criar Página "Diário de Aulas".
-    *   *Funcionalidade:* Registar Sumário da Sessão.
-    *   *Funcionalidade:* Marcar Presenças (Grid com Checkbox "Presente/Falta" pré-populada com os alunos da turma).
-*   **Tarefa 6.2.3:** Criar Página "Avaliação e Badges".
-    *   *Funcionalidade:* Lançar notas por módulo e atribuir badges de competência.
+    *   *Funcionalidade:* Botão "Gerar Lista" (PL/SQL) que importa alunos matriculados para a sessão.
+    *   *Funcionalidade:* Interactive Grid para marcar assiduidade.
+*   **Tarefa 6.2.3:** Criar Página "Pauta da Turma" (Avaliação Modular).
+    *   *Funcionalidade:* Grelha de notas por Módulo/Aluno com Feedback qualitativo.
+*   **Tarefa 6.2.4:** Criar Página "Gestão de Medalhas da Turma".
+    *   *Funcionalidade:* Interface de Fecho de Turma onde o formador seleciona as medalhas elegíveis (leitura de `Competencias` -> escrita em `Turma_Medalhas_Elegiveis`).
 
 ---
 
@@ -157,3 +161,28 @@ O desenvolvimento segue uma lógica **"Data-First"**: primeiro constrói-se a es
 ### Etapa 8.3: Segurança e Acessos
 *   **Tarefa 8.3.1:** Configurar Esquemas de Autorização (Admin vs Formador vs Técnico).
 *   **Tarefa 8.3.2:** Aplicar restrições de menu e página baseadas nos papéis.
+
+---
+
+## Anexo: Log de Execução e Planeamento
+*Estado do Projeto em 21 de Janeiro de 2026*
+
+### ✅ Fases Concluídas (Fundação & Catálogo)
+1.  **Modelo de Dados v7:** Unified Schema implementado e validado.
+2.  **Capítulo 1 (Fundação):** Tabelas de Domínio e Aplicação Base criadas.
+3.  **Capítulo 2 (Pessoas):** Gestão de Entidades Refatorada (Pessoas + Papéis).
+4.  **Capítulo 3 (Catálogo):**
+    *   Refatorização M:N (Competências e Medalhas) completa.
+    *   Implementação de Grelhas CRUD Mestre-Detalhe (Módulos).
+    *   Criação do Banco de Medalhas Global.
+
+### 📅 Próximos Passos (Operações & Pedagogia)
+1.  **Capítulo 4 (Logística):** Criação de Turmas e Cronogramas (Próxima Tarefa Crítica).
+2.  **Capítulo 5 (Inscrição):** Matrículas em Massa.
+3.  **Capítulo 6 (Pedagogia):**
+    *   Schema SQL (`06_Pedagogia.sql`) já criado.
+    *   Implementação das interfaces do Formador (Diário e Pautas) agendada para pós-Inscrição.
+
+### 📝 Notas de Validação
+*   O modelo de "Contrato Pedagógico" (`Obrigatorio='S'`) foi validado e distingue-se da atribuição de Medalhas.
+*   A UX de gestão de associações foi uniformizada para o padrão "Editable Grid".

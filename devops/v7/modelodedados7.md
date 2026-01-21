@@ -86,20 +86,49 @@ Para garantir consistência e manutenibilidade, todo o desenvolvimento deve segu
 | **Carga_Horaria** | `NUMBER` | | Horas do módulo. |
 | **Tipo_Avaliacao** | `VARCHAR2(20)` | `Check` | 'QUANTITATIVA', 'QUALITATIVA', 'NENHUMA'. |
 
-#### 4. `Competencias` (Competencias)
-*Catálogo de competências e badges.*
+#### 4. `Catalogo_Competencias` (Catalogo_Competencias)
+*Banco central de competências e badges (Reutilizável).*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
 | :--- | :--- | :--- | :--- |
 | **ID_Competencia** | `NUMBER` | `PK, Identity` | Chave primária. |
-| **ID_Modulo** | `NUMBER` | `FK` | Módulo associado. |
 | **Nome** | `VARCHAR2(255)` | `Not Null` | Nome da competência. |
 | **Descricao** | `VARCHAR2(4000)` | | Detalhe da competência. |
 | **ID_Area_Competencia** | `NUMBER` | `FK` | Lookup: `Tipos_Area_Competencia`. |
 | **ID_Nivel_Proficiencia** | `NUMBER` | `FK` | Lookup: `Tipos_Nivel_Proficiencia`. |
-| **URL_Medalha_Digital** | `VARCHAR2(500)` | | Link para badge info. |
-| **URL_Icone_Badge** | `VARCHAR2(500)` | | Imagem do badge. |
+| **Ativo** | `CHAR(1)` | `Default 'S'` | Se está disponível para seleção. |
+
+#### 4a. `Modulo_Competencias` (Modulo_Competencias)
+*Tabela de associação (M:N) - Que competências este módulo ensina.*
+
+| Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
+| :--- | :--- | :--- | :--- |
+| **ID_Associacao** | `NUMBER` | `PK, Identity` | Chave primária. |
+| **ID_Modulo** | `NUMBER` | `FK` | Módulo pai. |
+| **ID_Competencia** | `NUMBER` | `FK` | Competência do catálogo. |
+| **Obrigatorio** | `CHAR(1)` | `Default 'S'` | Se é obrigatória para o módulo. |
+
+#### 4b. `Catalogo_Medalhas` (Catalogo_Medalhas)
+*Open Badges disponíveis no sistema (Reutilizável).*
+
+| Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
+| :--- | :--- | :--- | :--- |
+| **ID_Medalha** | `NUMBER` | `PK, Identity` | Chave primária. |
+| **Nome** | `VARCHAR2(255)` | `Not Null` | Nome do Badge (ex: Excel Expert). |
+| **Descricao** | `VARCHAR2(4000)` | | Descrição do Badge. |
+| **URL_Medalha_Digital** | `VARCHAR2(500)` | | Link para definição do Open Badge. |
+| **URL_Imagem** | `VARCHAR2(500)` | | Link para a imagem do Badge. |
 | **URL_Claim_Badge** | `VARCHAR2(500)` | | Link para formulário de claim. |
+| **Ativo** | `CHAR(1)` | `Default 'S'` | 'S'/'N'. |
+
+#### 4c. `Competencia_Medalhas` (Competencia_Medalhas)
+*Associação M:N - Quais medalhas uma competência pode dar.*
+
+| Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
+| :--- | :--- | :--- | :--- |
+| **ID_Associacao** | `NUMBER` | `PK, Identity` | Chave primária. |
+| **ID_Competencia** | `NUMBER` | `FK` | Competência. |
+| **ID_Medalha** | `NUMBER` | `FK` | Medalha associada. |
 
 ---
 
@@ -185,7 +214,17 @@ Para garantir consistência e manutenibilidade, todo o desenvolvimento deve segu
 | **ID_Formador** | `NUMBER` | `FK` | Formador. |
 | **Principal** | `CHAR(1)` | | Formador responsável? |
 
-#### 9. `Matriculas` (Matriculas)
+#### 9. `Turma_Medalhas_Elegiveis` (Turma_Medalhas_Elegiveis)
+*Seleção do Formador - Quais medalhas serão atribuídas nesta turma.*
+
+| Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
+| :--- | :--- | :--- | :--- |
+| **ID_Associacao** | `NUMBER` | `PK, Identity` | Chave primária. |
+| **ID_Turma** | `NUMBER` | `FK` | Turma. |
+| **ID_Medalha** | `NUMBER` | `FK` | Medalha selecionada. |
+| **Selecionado_Por** | `VARCHAR2(255)` | | User que selecionou (Formador). |
+
+#### 10. `Matriculas` (Matriculas)
 *Inscrição do aluno na turma. Inclui agora o diagnóstico.*
 
 | Nome do Campo | Tipo (Oracle) | Constraints | Descrição |
