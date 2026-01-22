@@ -48,6 +48,11 @@ O desenvolvimento segue uma lógica **"Data-First"**: primeiro constrói-se a es
     *   *Requisito:* Implementar validação de NIF e Email únicos.
 *   **Tarefa 2.2.3:** Criar Grid de "Papéis" dentro da Ficha de Entidade (Master-Detail).
 
+### Etapa 2.3: Listas de Mailing (Bónus)
+*   **Tarefa 2.3.1:** Executar script `02C_Mailing_Lists.sql`.
+*   **Tarefa 2.3.2:** Implementar Checkbox Group "Listas de Distribuição" na Ficha de Entidade.
+    *   *Lógica:* Usar processo PL/SQL para gravar seleção múltipla (ver `Guia_Capitulo_02C_Mailing_Lists.md`).
+
 ---
 
 ## Capítulo 3: Catálogo Formativo
@@ -79,7 +84,7 @@ O desenvolvimento segue uma lógica **"Data-First"**: primeiro constrói-se a es
 *   **Tarefa 4.2.1:** Criar Formulário "Planeamento de Turma".
     *   *Funcionalidade:* Definição de datas, horário descritivo e coordenador.
 *   **Tarefa 4.2.2:** Criar Funcionalidade "Gerar Cronograma".
-    *   *Lógica:* Processo (PL/SQL) que gera automaticamente registos na tabela `Sessoes` com base nas datas de início/fim e dias da semana da turma.
+    *   *Lógica:* Processo (PL/SQL) que gera automaticamente sessões (ver código em `04_Automacao_Cronograma.sql`).
 *   **Tarefa 4.2.3:** Criar Calendário Visual (Calendar Region) para visualização de ocupação de salas.
 
 ---
@@ -165,23 +170,24 @@ O desenvolvimento segue uma lógica **"Data-First"**: primeiro constrói-se a es
 ---
 
 ## Anexo: Log de Execução e Planeamento
-*Estado do Projeto em 21 de Janeiro de 2026*
+*Estado do Projeto em 22 de Janeiro de 2026*
 
-### ✅ Fases Concluídas (Fundação & Catálogo)
+### ✅ Fases Concluídas (Fundação, Catálogo & Logística)
 1.  **Modelo de Dados v7:** Unified Schema implementado e validado.
 2.  **Capítulo 1 (Fundação):** Tabelas de Domínio e Aplicação Base criadas.
-3.  **Capítulo 2 (Pessoas):** Gestão de Entidades Refatorada (Pessoas + Papéis).
+3.  **Capítulo 2 (Pessoas):** Gestão de Entidades Refatorada e Mailing Lists implementadas.
 4.  **Capítulo 3 (Catálogo):**
     *   Refatorização M:N (Competências e Medalhas) completa.
     *   Implementação de Grelhas CRUD Mestre-Detalhe (Módulos).
     *   Criação do Banco de Medalhas Global.
+5.  **Capítulo 4 (Logística):**
+    *   Schema `04_Operacoes.sql` (Turmas/Sessões) criado e validado.
+    *   Automação PL/SQL de Cronograma implementada.
+    *   Dados de Teste `04_DummyData_Logistica.sql` criados.
 
-### 📅 Próximos Passos (Operações & Pedagogia)
-1.  **Capítulo 4 (Logística):** Criação de Turmas e Cronogramas (Próxima Tarefa Crítica).
-2.  **Capítulo 5 (Inscrição):** Matrículas em Massa.
-3.  **Capítulo 6 (Pedagogia):**
-    *   Schema SQL (`06_Pedagogia.sql`) já criado.
-    *   Implementação das interfaces do Formador (Diário e Pautas) agendada para pós-Inscrição.
+### 📅 Próximos Passos (Inscrição & Pedagogia)
+1.  **Capítulo 5 (Inscrição):** Matrículas e "Bulk Enrollment" (Próxima Sessão).
+2.  **Capítulo 6 (Pedagogia):** Interfaces do Formador (Diário e Pautas).
 
 ### 📝 Notas de Validação
 *   O modelo de "Contrato Pedagógico" (`Obrigatorio='S'`) foi validado e distingue-se da atribuição de Medalhas.
